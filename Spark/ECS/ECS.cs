@@ -28,12 +28,12 @@ public class ECS
 
     public T GetComponent<T>(Entity entity, string componentName) where T : class, IComponent
     {
-        return _componentManager.GetComponent<T>(componentName);
+        return _componentManager.GetComponent<T>(entity, componentName);
     }
 
     public void AddComponent<T>(Entity entity, string componentName, T component) where T : class, IComponent
     {
-        _componentManager.AddComponent(componentName, component);
+        _componentManager.AddComponent(entity, componentName, component);
         entity.AddComponent(componentName, component);
     }
 
@@ -41,14 +41,14 @@ public class ECS
     {
         foreach (var kvp in components)
         {
-            _componentManager.AddComponent(kvp.Key, kvp.Value);
+            _componentManager.AddComponent(entity, kvp.Key, kvp.Value);
             entity.AddComponent(kvp.Key, kvp.Value);
         }
     }
 
     public void RemoveComponent<T>(Entity entity, string componentName) where T : class, IComponent
     {
-        _componentManager.RemoveComponent<T>(componentName);
+        _componentManager.RemoveComponent<T>(entity, componentName);
         entity.RemoveComponent<T>(componentName);
     }
 
@@ -57,19 +57,24 @@ public class ECS
         var componentNames = entity.GetComponents<T>().Keys;
         foreach (var componentName in componentNames)
         {
-            _componentManager.RemoveComponent<T>(componentName);
+            _componentManager.RemoveComponent<T>(entity, componentName);
         }
         entity.RemoveComponents<T>();
     }
 
-    public void AddSystem(string systemName, ISystem system)
+    public List<T> GetComponentsOfType<T>() where T : IComponent
     {
-        _systemManager.AddSystem(systemName, system);
+        return _componentManager.GetComponentsOfType<T>();
     }
 
-    public void RemoveSystem(string systemName)
+    public void AddSystem(ISystem system)
     {
-        _systemManager.RemoveSystem(systemName);
+        _systemManager.AddSystem(system);
+    }
+
+    public void RemoveSystem<T>() where T : ISystem
+    {
+        _systemManager.RemoveSystem<T>();
     }
 
     public void OnUpdate(float deltaTime = -1)

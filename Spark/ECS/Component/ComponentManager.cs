@@ -4,37 +4,61 @@ using System.Collections.Generic;
 namespace Spark.ECS.ComponentCore;
 internal class ComponentManager
 {
-    private Dictionary<Type, Dictionary<string, IComponent>> _components = new Dictionary<Type, Dictionary<string, IComponent>>();
+    private Dictionary<Type, Dictionary<Entity, Dictionary<string, IComponent>>> _components = new();
 
-    public void AddComponent<T>(string componentName, T component) where T : IComponent
+    public void AddComponent<T>(Entity entity, string componentName, T component) where T : IComponent
     {
         Type type = typeof(T);
         if (!_components.ContainsKey(type))
         {
-            _components[type] = new Dictionary<string, IComponent>();
+            _components[type] = new Dictionary<Entity, Dictionary<string, IComponent>>();
         }
 
-        _components[type][componentName] = component;
+        if (!_components[type].ContainsKey(entity))
+        {
+            _components[type][entity] = new Dictionary<string, IComponent>();
+        }
+
+        _components[type][entity][componentName] = component;
     }
 
-    public T GetComponent<T>(string componentName) where T : IComponent
+    public T GetComponent<T>(Entity entity, string componentName) where T : IComponent
     {
         Type type = typeof(T);
-        return (T)_components[type][componentName];
+        return (T)_components[type][entity][componentName];
     }
 
-    public List<IComponent> GetComponentList<T>() where T : IComponent
+    public List<T> GetComponentsOfType<T>() where T : IComponent
     {
-        Type type = typeof(T);
-        return new List<IComponent>(_components[type].Values);
-    }
-
-    public void RemoveComponent<T>(string componentName) where T : IComponent
-    {
-        Type type = typeof(T);
+        var type = typeof(T);
+        var result = new List<T>();
         if (_components.ContainsKey(type))
         {
-            _components[type].Remove(componentName);
+            foreach (var entityComponents in _components[type].Values)
+            {
+                foreach (var component in entityComponents.Values)
+                {
+                    result.Add((T)component);
+                }
+            }
+        }
+        return result;
+    }
+
+    public void RemoveComponent<T>(Entity entity, string componentName) where T : IComponent
+    {
+        var type = typeof(T);
+        if (_components.ContainsKey(type) && _components[type].ContainsKey(entity))
+        {
+            _components[type][entity].Remove(componentName);
+            if (_components[type][entity].Count == 0)
+            {
+                _components[type].Remove(entity);
+            }
+            if (_components[type].Count == 0)
+            {
+                _components.Remove(type);
+            }
         }
     }
 }

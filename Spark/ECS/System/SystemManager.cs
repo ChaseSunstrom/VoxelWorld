@@ -2,47 +2,47 @@
 internal class SystemManager
 {
     private SystemIdManager _systemIdManager = new SystemIdManager();
-    private Dictionary<string, IUpdateSystem?> _updateSystems = new Dictionary<string, IUpdateSystem?>();
-    private Dictionary<string, IShutdownSystem?> _shutdownSystems = new Dictionary<string, IShutdownSystem?>();
-    private Dictionary<string, IStartSystem?> _startSystems = new Dictionary<string, IStartSystem?>();
+    private Dictionary<Type, IUpdateSystem?> _updateSystems = new Dictionary<Type, IUpdateSystem?>();
+    private Dictionary<Type, IShutdownSystem?> _shutdownSystems = new Dictionary<Type, IShutdownSystem?>();
+    private Dictionary<Type, IStartSystem?> _startSystems = new Dictionary<Type, IStartSystem?>();
 
-    public void AddSystem(string systemName, ISystem system)
+    public void AddSystem(ISystem system)
     {
-        string systemId = _systemIdManager.GetId(systemName);
+        Type systemType = system.GetType();
 
         if (system is IUpdateSystem updateSystem)
         {
-            _updateSystems[systemId] = updateSystem;
+            _updateSystems[systemType] = updateSystem;
         }
 
         if (system is IShutdownSystem shutdownSystem)
         {
-            _shutdownSystems[systemId] = shutdownSystem;
+            _shutdownSystems[systemType] = shutdownSystem;
         }
 
         if (system is IStartSystem startSystem)
         {
-            _startSystems[systemId] = startSystem;
+            _startSystems[systemType] = startSystem;
         }
     }
 
-    public void RemoveSystem(string systemName)
+    public void RemoveSystem<T>() where T : ISystem
     {
-        string systemId = _systemIdManager.DisposeId(systemName);
+        Type systemType = typeof(T);
 
-        if (_updateSystems.ContainsKey(systemId))
+        if (_updateSystems.ContainsKey(systemType))
         {
-            _updateSystems[systemId] = null;
+            _updateSystems[systemType] = null;
         }
 
-        if (_shutdownSystems.ContainsKey(systemId))
+        if (_shutdownSystems.ContainsKey(systemType))
         {
-            _shutdownSystems[systemId] = null;
+            _shutdownSystems[systemType] = null;
         }
 
-        if (_startSystems.ContainsKey(systemId))
+        if (_startSystems.ContainsKey(systemType))
         {
-            _startSystems[systemId] = null;
+            _startSystems[systemType] = null;
         }
     }
 
