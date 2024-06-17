@@ -1,10 +1,9 @@
 ﻿namespace Spark.ECS.SystemCore;
 internal class SystemManager
 {
-    private SystemIdManager _systemIdManager = new SystemIdManager();
-    private Dictionary<Type, IUpdateSystem?> _updateSystems = new Dictionary<Type, IUpdateSystem?>();
-    private Dictionary<Type, IShutdownSystem?> _shutdownSystems = new Dictionary<Type, IShutdownSystem?>();
-    private Dictionary<Type, IStartSystem?> _startSystems = new Dictionary<Type, IStartSystem?>();
+    private Dictionary<Type, IUpdateSystem?> _updateSystems = new();
+    private Dictionary<Type, IShutdownSystem?> _shutdownSystems = new();
+    private Dictionary<Type, IStartSystem?> _startSystems = new();
 
     public void AddSystem(ISystem system)
     {
@@ -46,6 +45,11 @@ internal class SystemManager
         }
     }
 
+    public T? GetSystem<T>() where T : ISystem
+    {
+        return (T?)_updateSystems[typeof(T)] ?? (T?)_shutdownSystems[typeof(T)] ?? (T?)_startSystems[typeof(T)];
+    }
+
     public void OnUpdate(float deltaTime)
     {
         if (deltaTime == -1)
@@ -70,39 +74,6 @@ internal class SystemManager
         foreach (var system in _shutdownSystems.Values)
         {
             system?.OnShutdown();
-        }
-    }
-
-    private class SystemIdManager
-    {
-        private Dictionary<string, string> _nameToId = new Dictionary<string, string>();
-        private Dictionary<string, string> _idToName = new Dictionary<string, string>();
-        private int _nextId = 0;
-
-        public string GetId(string name)
-        {
-            if (!_nameToId.ContainsKey(name))
-            {
-                string id = _nextId.ToString();
-                _nameToId[name] = id;
-                _idToName[id] = name;
-                _nextId++;
-            }
-
-            return _nameToId[name];
-        }
-
-        public string DisposeId(string name)
-        {
-            if (_nameToId.ContainsKey(name))
-            {
-                string id = _nameToId[name];
-                _nameToId.Remove(name);
-                _idToName.Remove(id);
-                return id;
-            }
-
-            return string.Empty;
         }
     }
 }

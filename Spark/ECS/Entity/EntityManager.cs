@@ -2,7 +2,7 @@
 
 internal class EntityManager
 {
-    private Dictionary<string, Entity> _entities = new Dictionary<string, Entity>();
+    private Dictionary<string, Entity> _entities = new();
     private Stack<int> _oldIds = new();
     private int _nextEntityId = 0;
 

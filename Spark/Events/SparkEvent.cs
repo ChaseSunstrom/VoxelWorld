@@ -27,5 +27,3 @@ public class Event : IEvent
     public bool Handled { get; set; }
     public int Type { get; }
 }
-
-

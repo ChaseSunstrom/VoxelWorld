@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 namespace Spark.Events;
 public static class EventSubject
 {
-    private static readonly Dictionary<Type, List<object>> _observers = new Dictionary<Type, List<object>>();
-    private static readonly List<object> _allObservers = new List<object>();
+    private static readonly Dictionary<Type, List<object>> _observers = new();
+    private static readonly List<object> _allObservers = new();
 
     public static void Subscribe<T>(Action<T> callback) where T : IEvent
     {

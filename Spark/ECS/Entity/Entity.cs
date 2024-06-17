@@ -6,67 +6,23 @@ namespace Spark.ECS.EntityCore;
 public class Entity
 {
     public string Id { get; }
-    private Dictionary<Type, Dictionary<string, IComponent>> _components = new();
+    private Dictionary<(Type, string), IComponent> _components = new();
 
-    internal Entity(string id)
-    {
-        Id = id;
-    }
+    internal Entity(string id) => Id = id;
 
-    internal Entity(string id, Dictionary<Type, Dictionary<string, IComponent>> components) : this(id)
-    {
-        _components = components;
-    }
+    internal Entity(string id, Dictionary<(Type, string), IComponent> components) : this(id) => _components = components;
 
-    public Dictionary<string, T> GetComponents<T>() where T : IComponent
-    {
-        Type type = typeof(T);
-        if (_components.TryGetValue(type, out var componentDict))
-        {
-            return componentDict.ToDictionary(x => x.Key, x => (T)x.Value);
-        }
-        return new Dictionary<string, T>();
-    }
+    public Dictionary<string, T> GetComponents<T>() where T : class, IComponent => _components.Where(kvp => kvp.Key.Item1 == typeof(T)).ToDictionary(kvp => kvp.Key.Item2, kvp => (T)kvp.Value);
 
-    public T? GetComponent<T>(string componentName) where T : class, IComponent
-    {
-        Type type = typeof(T);
-        if (_components.TryGetValue(type, out var componentDict))
-        {
-            if (componentDict.TryGetValue(componentName, out var component))
-            {
-                return (T)component;
-            }
-        }
-        return null;
-    }
+    public T? GetComponent<T>(string componentName) where T : class, IComponent => (T)_components.GetValueOrDefault((typeof(T), componentName), null);
 
-    internal void AddComponent<T>(string componentName, T component) where T : class, IComponent
-    {
-        Type type = typeof(T);
-        if (!_components.ContainsKey(type))
-        {
-            _components[type] = new Dictionary<string, IComponent>();
-        }
-        _components[type][componentName] = component;
-    }
+    internal void AddComponent<T>(string componentName, T component) where T : class, IComponent => _components[(typeof(T), componentName)] = component;
 
-    internal void RemoveComponent<T>(string componentName) where T : class, IComponent
-    {
-        Type type = typeof(T);
-        if (_components.TryGetValue(type, out var componentDict))
-        {
-            componentDict.Remove(componentName);
-            if (componentDict.Count == 0)
-            {
-                _components.Remove(type);
-            }
-        }
-    }
+    internal void RemoveComponent<T>(string componentName) where T : class, IComponent => _components.Remove((typeof(T), componentName));
 
     internal void RemoveComponents<T>() where T : class, IComponent
     {
-        Type type = typeof(T);
-        _components.Remove(type);
+        foreach (var key in _components.Keys.Where(k => k.Item1 == typeof(T)).ToList())
+            _components.Remove(key);
     }
 }
