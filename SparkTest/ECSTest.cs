@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Spark.ECS.SystemCore;
 using Spark.Engine.Core.Ecs;
 using Spark.Engine.Core.Ecs.EntityNS;
-using Spark.Engine.Core.ECS.Component;
+using Spark.Engine.Core.Ecs.Component;
 
 namespace SparkTest;
 
