@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-using Spark.ECS;
-using Spark.ECS.EntityCore;
-using Spark.ECS.ComponentCore;
 using Spark.ECS.SystemCore;
+using Spark.Engine.Core.Ecs;
+using Spark.Engine.Core.Ecs.EntityNS;
+using Spark.Engine.Core.ECS.Component;
 
 namespace SparkTest;
 
@@ -18,7 +17,7 @@ class TestComponent : IComponent
 
 public class SparkECSTest
 {
-    ECS _ECS = new ECS();
+    Ecs _ECS = new Ecs();
     [Fact]
     public void TestEntityCreate()
     {
