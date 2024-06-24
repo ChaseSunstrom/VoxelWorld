@@ -26,14 +26,39 @@ public class Application
         return this;
     }
 
+    public Application AddStartupFunctions(params (StartupFunction, object[]) functions)
+    {
+        foreach(var (function, args) in functions)
+            _startupFunctions.Add((function, args));
+
+        return this;
+    }
+
     public Application AddUpdateFunction(UpdateFunction function, params object[] args)
     {
         _updateFunctions.Add((function, args));
         return this;
     }
+
+    public Application AddUpdateFunctions(params (StartupFunction, object[]) functions)
+    {
+        foreach(var (function, args) in functions)
+            _updateFunctions.Add((function, args));
+
+        return this;
+    }
+
     public Application AddResource<T>(T resource, string name)
     {
         _resourceManager.AddResource(resource, name);
+        return this;
+    }
+
+    public Application AddResources<T>(params (T, string) resources)
+    {
+        foreach (var (type, name) in resources)
+            _resourceManager.AddResource(type, name);
+
         return this;
     }
 
