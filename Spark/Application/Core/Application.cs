@@ -26,7 +26,7 @@ public class Application
         return this;
     }
 
-    public Application AddStartupFunctions(params (StartupFunction, object[]) functions)
+    public Application AddStartupFunctions(params (StartupFunction, object[])[] functions)
     {
         foreach(var (function, args) in functions)
             _startupFunctions.Add((function, args));
@@ -40,7 +40,7 @@ public class Application
         return this;
     }
 
-    public Application AddUpdateFunctions(params (StartupFunction, object[]) functions)
+    public Application AddUpdateFunctions(params (StartupFunction, object[])[] functions)
     {
         foreach(var (function, args) in functions)
             _updateFunctions.Add((function, args));
@@ -54,7 +54,7 @@ public class Application
         return this;
     }
 
-    public Application AddResources<T>(params (T, string) resources)
+    public Application AddResources<T>(params (T, string)[] resources)
     {
         foreach (var (type, name) in resources)
             _resourceManager.AddResource(type, name);
