@@ -40,7 +40,7 @@ public class Application
         return this;
     }
 
-    public Application AddUpdateFunctions(params (StartupFunction, object[])[] functions)
+    public Application AddUpdateFunctions(params (UpdateFunction, object[])[] functions)
     {
         foreach(var (function, args) in functions)
             _updateFunctions.Add((function, args));
