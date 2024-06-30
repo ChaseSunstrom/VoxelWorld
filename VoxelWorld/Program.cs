@@ -8,14 +8,14 @@ public struct TestResource
 {
     string _name = "TEST";
 
-    TestResource(string name)
+    public TestResource(string name)
     {
         _name = name;
     }
 
     public void PrintName()
     {
-        Console.WriteLine("TESTTESTEST");
+        Console.WriteLine(_name);
     }
 }
 
@@ -39,9 +39,9 @@ class Program
 
     public static void Main()
     {
-        Application app = new(new WindowData(1000, 1000, "Hi"), CancellationState.Token);
+        Application app = new(new WindowData(1000, 1000, "Hi"), Cancellation.Token);
 
-        app.AddResource(new TestResource(), "TestResource")
+        app.AddResource(new TestResource("Hello, World!"), "TestResource")
            .AddStartupFunction(StartupFunction)
            .AddUpdateFunction(UpdateFunction1)
            .AddUpdateFunction(UpdateFunction2)

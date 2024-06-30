@@ -1,5 +1,6 @@
 ﻿using Spark.Application.Core.WindowNS;
 using Spark.Engine.Core.Resource;
+using Spark.Common;
 
 namespace Spark.Application.Core;
 public class Application
@@ -9,15 +10,23 @@ public class Application
 
     private readonly List<(StartupFunction, object[])> _startupFunctions = new();
     private readonly List<(UpdateFunction, object[])> _updateFunctions = new();
-    private readonly CancellationToken _ct;
+    private readonly CancellationToken _ct = Cancellation.Token;
     private readonly Window _window;
     private readonly ResourceManager _resourceManager = new();
+    private ApplicationType _applicationType = ApplicationType.Game;
     private float _timeStep = 60;
 
-    public Application(WindowData windowData, CancellationToken ct)
+    public Application(WindowData windowData, ApplicationType applicationType)
+    {
+        _window = new Window(windowData, _ct);
+        _applicationType = applicationType;
+    }
+
+    public Application(WindowData windowData, ApplicationType applicationType, CancellationToken ct)
     {
         _ct = ct;
-        _window = new Window(windowData, ct);
+        _window = new Window(windowData, _ct);
+        _applicationType = applicationType;
     }
 
     public Application AddStartupFunction(StartupFunction function, params object[] args)
@@ -36,7 +45,6 @@ public class Application
         _resourceManager.AddResource(resource, name);
         return this;
     }
-
     public bool HasResource<T>(string name) => _resourceManager.HasResource<T>(name);
 
     public T? GetResource<T>(string name) => _resourceManager.GetResource<T>(name);

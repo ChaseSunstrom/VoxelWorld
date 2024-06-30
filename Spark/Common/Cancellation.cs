@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 
 namespace Spark.Common;
-public static class CancellationState
+public static class Cancellation
 {
     private static readonly CancellationTokenSource _cts = new();
 
