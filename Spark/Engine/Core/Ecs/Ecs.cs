@@ -1,6 +1,5 @@
-﻿using Spark.ECS.SystemCore;
-using Spark.Engine.Core.Ecs.EntityNS;
-using Spark.Engine.Core.Ecs.System;
+﻿using Spark.Engine.Core.Ecs.Entities;
+using Spark.Engine.Core.Ecs.Systems;
 using Spark.Engine.Core.Ecs.Component;
 
 namespace Spark.Engine.Core.Ecs;

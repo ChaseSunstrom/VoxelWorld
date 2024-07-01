@@ -38,5 +38,5 @@ public class Window
         _window.Resized += () => _windowResized = true;
     }
 
-    public bool Running() => _window.Exists && !_ct.IsCancellationRequested;
+    public bool Running() => _window?.Exists ?? false && !_ct.IsCancellationRequested;
 }

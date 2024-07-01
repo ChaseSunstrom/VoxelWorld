@@ -1,5 +1,5 @@
 ﻿using Spark.Engine.Core.Events;
-using Spark.Engine.Core.Ecs.EntityNS;
+using Spark.Engine.Core.Ecs.Entities;
 using Spark.Engine.Core.Ecs.Component;
 
 namespace Spark.Engine.Core.Ecs;

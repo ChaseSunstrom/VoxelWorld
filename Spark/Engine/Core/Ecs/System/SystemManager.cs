@@ -1,6 +1,6 @@
-﻿using Spark.Engine.Core.Ecs.System;
+﻿using Spark.Engine.Core.Ecs.Systems;
 
-namespace Spark.ECS.SystemCore;
+namespace Spark.Engine.Core.Ecs.Systems;
 internal class SystemManager
 {
     private Dictionary<Type, IUpdateSystem?> _updateSystems = new();

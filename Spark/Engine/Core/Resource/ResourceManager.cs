@@ -1,41 +1,61 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Spark.Engine.Core.Resource;
+﻿namespace Spark.Engine.Core.Resources;
 
 public class ResourceManager
 {
-    private readonly Dictionary<(Type, string), object?> _resources = new();
+    private readonly Dictionary<Type, Dictionary<string, object>> _resources = new();
 
-    public void AddResource<T>(T resource, string id)
+    public void AddResource<T>(T resource, string name)
     {
-        var key = (typeof(T), id);
-        _resources[key] = resource;
-    }
-
-    public T? GetResource<T>(string id)
-    {
-        var key = (typeof(T), id);
-        if (_resources.TryGetValue(key, out var resource))
+        var type = typeof(T);
+        if (!_resources.ContainsKey(type))
         {
-            return (T?)resource;
+            _resources[type] = new Dictionary<string, object>();
         }
-
-        throw new InvalidOperationException($"Resource of type {typeof(T)} with ID '{id}' not found.");
+        _resources[type][name] = resource;
     }
 
-    public bool HasResource<T>(string id)
+    public bool HasResource<T>(string name)
     {
-        var key = (typeof(T), id);
-        return _resources.ContainsKey(key);
+        var type = typeof(T);
+        return _resources.ContainsKey(type) && _resources[type].ContainsKey(name);
     }
 
-    public void RemoveResource<T>(string id)
+    public T? GetResource<T>(string name)
     {
-        var key = (typeof(T), id);
-        _resources.Remove(key);
+        var type = typeof(T);
+        if (_resources.ContainsKey(type) && _resources[type].ContainsKey(name))
+        {
+            return (T)_resources[type][name];
+        }
+        return default;
+    }
+    
+    public T GetResourceOrDefault<T>(string name, T defaultValue)
+    {
+        var type = typeof(T);
+        if (_resources.ContainsKey(type) && _resources[type].ContainsKey(name))
+        {
+            return (T)_resources[type][name];
+        }
+        return defaultValue;
+    }
+
+    public IEnumerable<T> GetAllResources<T>()
+    {
+        var type = typeof(T);
+        if (_resources.ContainsKey(type))
+        {
+            return _resources[type].Values.Cast<T>();
+        }
+        return Enumerable.Empty<T>();
+    }
+
+    public void RemoveResource<T>(string name)
+    {
+        var type = typeof(T);
+        if (_resources.ContainsKey(type) && _resources[type].ContainsKey(name))
+        {
+            _resources[type].Remove(name);
+        }
     }
 }

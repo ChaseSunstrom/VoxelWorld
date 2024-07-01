@@ -1,7 +1,7 @@
 ﻿using Spark.Engine.Core.Ecs.Component;
 using System.Collections.Generic;
 
-namespace Spark.Engine.Core.Ecs.EntityNS;
+namespace Spark.Engine.Core.Ecs.Entities;
 
 public class Entity
 {
@@ -15,7 +15,9 @@ public class Entity
     public Dictionary<string, T> GetComponents<T>() where T : class, IComponent => _components.Where(kvp => kvp.Key.Item1 == typeof(T)).ToDictionary(kvp => kvp.Key.Item2, kvp => (T)kvp.Value);
 
     public T? GetComponent<T>(string componentName) where T : class, IComponent => (T)_components.GetValueOrDefault((typeof(T), componentName), null);
-
+    
+    public T GetComponentOrDefault<T>(string componentName, T defaultValue) where T : class, IComponent => (T)_components.GetValueOrDefault((typeof(T), componentName), defaultValue);
+    
     internal void AddComponent<T>(string componentName, T component) where T : class, IComponent => _components[(typeof(T), componentName)] = component;
 
     internal void RemoveComponent<T>(string componentName) where T : class, IComponent => _components.Remove((typeof(T), componentName));

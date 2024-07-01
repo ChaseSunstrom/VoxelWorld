@@ -1,4 +1,4 @@
-﻿namespace Spark.Engine.Core.Ecs.EntityNS;
+﻿namespace Spark.Engine.Core.Ecs.Entities;
 
 internal class EntityManager
 {

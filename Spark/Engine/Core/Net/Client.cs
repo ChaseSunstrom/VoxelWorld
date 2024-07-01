@@ -6,7 +6,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Spark.Engine.Core.Serialization;
-using Spark.Engine.Util;
+using Spark.Common.Util;
 
 namespace Spark.Engine.Core.Net;
 

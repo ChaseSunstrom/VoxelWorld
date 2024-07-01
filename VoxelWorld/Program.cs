@@ -1,12 +1,14 @@
 ﻿using Spark.Engine.Core.Ecs;
-using Spark.Engine.Core.Ecs.EntityNS;
+using Spark.Engine.Core.Ecs.Entities;
 using Spark.Common;
+using Spark.Common.Util;
 using Spark.Application.Core;
 using Spark.Application.Core.WindowNS;
+using Spark.Common.Util;
 
 public struct TestResource
 {
-    string _name = "TEST";
+    string _name;
 
     public TestResource(string name)
     {
@@ -39,14 +41,12 @@ class Program
 
     public static void Main()
     {
-        Application app = new(new WindowData(1000, 1000, "Hi"), Cancellation.Token);
-
-        app.AddResource(new TestResource("Hello, World!"), "TestResource")
-           .AddStartupFunction(StartupFunction)
-           .AddUpdateFunction(UpdateFunction1)
-           .AddUpdateFunction(UpdateFunction2)
-           .SetTimeStep(100)
-           .Initialize()
-           .Run();
+        new Application(new WindowData(1000, 1000, "Voxel Game"))
+            .AddStartupFunction(StartupFunction)
+            .AddUpdateFunction(UpdateFunction1)
+            .AddUpdateFunction(UpdateFunction2)
+            .SetTimeStep(100)
+            .Initialize()
+            .Run();
     }
 }

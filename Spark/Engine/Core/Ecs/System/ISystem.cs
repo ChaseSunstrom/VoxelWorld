@@ -1,4 +1,4 @@
-﻿namespace Spark.Engine.Core.Ecs.System;
+﻿namespace Spark.Engine.Core.Ecs.Systems;
 public interface ISystem
 {
     public int SystemId { get; internal set; }

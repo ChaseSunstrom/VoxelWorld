@@ -20,8 +20,4 @@
     <PackageReference Include="Veldrid.Utilities" Version="4.9.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Engine\Core\NewFolder\" />
-  </ItemGroup>
-
 </Project>

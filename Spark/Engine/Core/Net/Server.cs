@@ -1,5 +1,5 @@
 ﻿using Spark.Engine.Core.Serialization;
-using Spark.Engine.Util;
+using Spark.Common.Util;
 using System;
 using System.Collections.Concurrent;
 using System.Net;
